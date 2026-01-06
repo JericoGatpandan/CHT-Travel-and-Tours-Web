@@ -890,3 +890,356 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// userTransportation.js
+
+// assets/js/user-transportation.js
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tbody = document.querySelector("#transportTable tbody");
+  const searchInput = document.getElementById("transportSearch");
+  const countLabel = document.getElementById("transportCountLabel");
+
+  const sidebarNewBookingBtn = document.getElementById("sidebarNewBookingBtn");
+  const logoutBtn = document.getElementById("userLogoutBtn");
+
+  // Load from localStorage
+  let vehicles = JSON.parse(localStorage.getItem("cht_transport") || "[]");
+
+  // Seed demo data if none
+  if (!vehicles.length) {
+    vehicles = [
+      {
+        id: 1,
+        type: "Bus",
+        capacity: "40 seats",
+        plate: "HOK-1234",
+        provider: "Hokkaido Tours Co.",
+        pricePerDay: 5000
+      },
+      {
+        id: 2,
+        type: "Bus",
+        capacity: "45 seats",
+        plate: "HK-5678",
+        provider: "Hong Kong Coaches",
+        pricePerDay: 5000
+      },
+      {
+        id: 3,
+        type: "Bus",
+        capacity: "35 seats",
+        plate: "BALI-009",
+        provider: "Bali Transport",
+        pricePerDay: 5000
+      },
+      {
+        id: 4,
+        type: "Bus",
+        capacity: "40 seats",
+        plate: "TPE-2026",
+        provider: "Taiwan Coaches",
+        pricePerDay: 5000
+      }
+    ];
+    localStorage.setItem("cht_transport", JSON.stringify(vehicles));
+  }
+
+  let filteredVehicles = [...vehicles];
+
+  function formatPHP(n) {
+    return "₱" + Number(n || 0).toLocaleString("en-PH", {
+      minimumFractionDigits: 0
+    });
+  }
+
+  function renderCount() {
+    const total = filteredVehicles.length;
+    if (countLabel) {
+      countLabel.textContent = `${total} vehicle${total === 1 ? "" : "s"}`;
+    }
+  }
+
+  function renderVehicles() {
+    tbody.innerHTML = "";
+    filteredVehicles.forEach(v => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${v.id}</td>
+        <td>${v.type}</td>
+        <td>${v.capacity}</td>
+        <td>${v.plate}</td>
+        <td>${v.provider}</td>
+        <td class="transport-price">${formatPHP(v.pricePerDay)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    renderCount();
+  }
+
+  renderVehicles();
+
+  function applySearch() {
+    const q = (searchInput.value || "").toLowerCase();
+    if (!q) {
+      filteredVehicles = [...vehicles];
+    } else {
+      filteredVehicles = vehicles.filter(v =>
+        `${v.type} ${v.provider}`.toLowerCase().includes(q)
+      );
+    }
+    renderVehicles();
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("keyup", e => {
+      if (e.key === "Enter") applySearch();
+    });
+  }
+
+  // New booking from sidebar
+  if (sidebarNewBookingBtn) {
+    sidebarNewBookingBtn.addEventListener("click", () => {
+      window.location.href = "userBooking-step1.html";
+    });
+  }
+
+  // Logout
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("cht_current_username");
+      window.location.href = "login.html";
+    });
+  }
+});
+
+// userPayments.js
+
+// assets/js/user-payments.js
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tbody = document.querySelector("#paymentsTable tbody");
+  const searchInput = document.getElementById("paymentsSearch");
+
+  const statTotalReceived = document.getElementById("statTotalReceived");
+  const statPendingAmount = document.getElementById("statPendingAmount");
+  const statTransactions = document.getElementById("statTransactions");
+
+  const addPaymentBtn = document.getElementById("addPaymentBtn");
+  const modalOverlay = document.getElementById("paymentModalOverlay");
+  const closeModalBtn = document.getElementById("closePaymentModalBtn");
+  const cancelPaymentBtn = document.getElementById("cancelPaymentBtn");
+  const paymentForm = document.getElementById("paymentForm");
+
+  const bookingField = document.getElementById("payBookingId");
+  const clientField = document.getElementById("payClientName");
+  const packageField = document.getElementById("payPackageName");
+  const amountField = document.getElementById("payAmount");
+  const dateField = document.getElementById("payDate");
+  const methodField = document.getElementById("payMethod");
+  const statusField = document.getElementById("payStatus");
+  const refField = document.getElementById("payReference");
+
+  const sidebarNewBookingBtn = document.getElementById("sidebarNewBookingBtn");
+  const logoutBtn = document.getElementById("userLogoutBtn");
+
+  // -------- Load / seed data --------
+  let payments = JSON.parse(localStorage.getItem("cht_payments") || "[]");
+
+  if (!payments.length) {
+    payments = [
+      {
+        id: 2,
+        bookingId: 1,
+        client: "Carlos Ramirez",
+        package: "Hokkaido Icebreaker + Sapporo Snow Festival",
+        amount: 150000,
+        date: "2025-12-20",
+        method: "Bank Transfer",
+        status: "PAID",
+        reference: "BANK-DEP-1001"
+      },
+      {
+        id: 5,
+        bookingId: 5,
+        client: "Andrea Bautista",
+        package: "Hokkaido Icebreaker + Sapporo Snow Festival",
+        amount: 228800,
+        date: "2025-12-10",
+        method: "Bank Transfer",
+        status: "PAID",
+        reference: "BANK-DEP-2002"
+      },
+      {
+        id: 3,
+        bookingId: 2,
+        client: "Jenny Villanueva",
+        package: "Hong Kong & Macau Getaway",
+        amount: 2000,
+        date: "2025-12-05",
+        method: "Credit/Debit Card",
+        status: "PENDING",
+        reference: "CARD-APP-8899"
+      }
+    ];
+    localStorage.setItem("cht_payments", JSON.stringify(payments));
+  }
+
+  let filteredPayments = [...payments];
+
+  // -------- Helpers --------
+  function formatPHP(n) {
+    return "₱" + Number(n || 0).toLocaleString("en-PH", {
+      minimumFractionDigits: 2
+    });
+  }
+
+  function formatDate(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric"
+    });
+  }
+
+  // -------- Stats --------
+  function renderStats() {
+    const totalReceived = payments
+      .filter(p => p.status === "PAID")
+      .reduce((sum, p) => sum + (p.amount || 0), 0);
+
+    const pendingTotal = payments
+      .filter(p => p.status === "PENDING")
+      .reduce((sum, p) => sum + (p.amount || 0), 0);
+
+    statTotalReceived.textContent = formatPHP(totalReceived);
+    statPendingAmount.textContent = formatPHP(pendingTotal);
+    statTransactions.textContent = payments.length;
+  }
+
+  // -------- Table --------
+  function renderPayments() {
+    tbody.innerHTML = "";
+    filteredPayments.forEach(p => {
+      const statusClass =
+        p.status === "PAID"
+          ? "payment-status-paid"
+          : p.status === "PENDING"
+          ? "payment-status-pending"
+          : "payment-status-failed";
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${p.id}</td>
+        <td>${p.bookingId}</td>
+        <td>${p.client}</td>
+        <td>${p.package}</td>
+        <td class="payment-amount">${formatPHP(p.amount)}</td>
+        <td>${formatDate(p.date)}</td>
+        <td>${p.method}</td>
+        <td>
+          <span class="payment-status-pill ${statusClass}">
+            ${p.status}
+          </span>
+        </td>
+        <td>${p.reference}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    renderStats();
+  }
+
+  renderPayments();
+
+  // -------- Search --------
+  function applySearch() {
+    const q = (searchInput.value || "").toLowerCase();
+    if (!q) {
+      filteredPayments = [...payments];
+    } else {
+      filteredPayments = payments.filter(p =>
+        `${p.client} ${p.reference} ${p.bookingId}`
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+    renderPayments();
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("keyup", e => {
+      if (e.key === "Enter") applySearch();
+    });
+  }
+
+  // -------- Modal open/close --------
+  function openModal() {
+    paymentForm.reset();
+    const today = new Date().toISOString().slice(0, 10);
+    dateField.value = today;
+    statusField.value = "PAID";
+    modalOverlay.classList.remove("hidden");
+  }
+
+  function closeModal() {
+    modalOverlay.classList.add("hidden");
+  }
+
+  addPaymentBtn.addEventListener("click", openModal);
+  closeModalBtn.addEventListener("click", closeModal);
+  cancelPaymentBtn.addEventListener("click", closeModal);
+
+  modalOverlay.addEventListener("click", e => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  // -------- Save payment --------
+  paymentForm.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const amount = Number(amountField.value || 0);
+    if (!amount || amount <= 0) {
+      alert("Amount must be greater than zero.");
+      return;
+    }
+
+    const nextId =
+      payments.length ? Math.max(...payments.map(p => p.id)) + 1 : 1;
+
+    const newPayment = {
+      id: nextId,
+      bookingId: Number(bookingField.value || 0),
+      client: clientField.value.trim(),
+      package: packageField.value.trim(),
+      amount,
+      date: dateField.value,
+      method: methodField.value,
+      status: statusField.value,
+      reference: refField.value.trim()
+    };
+
+    payments.push(newPayment);
+    localStorage.setItem("cht_payments", JSON.stringify(payments));
+
+    filteredPayments = [...payments];
+    renderPayments();
+    closeModal();
+  });
+
+  // -------- Sidebar / logout --------
+  if (sidebarNewBookingBtn) {
+    sidebarNewBookingBtn.addEventListener("click", () => {
+      window.location.href = "userBooking-step1.html";
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("cht_current_username");
+      window.location.href = "login.html";
+    });
+  }
+});

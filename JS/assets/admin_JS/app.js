@@ -2,6 +2,7 @@
 
 // Detect which page we are on by checking body classes or element IDs
 document.addEventListener("DOMContentLoaded", () => {
+  /* -------- LOGIN PAGE -------- */
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {
@@ -13,18 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
       // Store username so user dashboard can show it
       localStorage.setItem("cht_current_username", username);
 
+      // Redirect based on selected role
       if (role === "admin") {
-        window.location.href = "dashboard.html";          // admin dashboard
+        window.location.href = "adminDashboard/dashboard.html";
       } else if (role === "user") {
-        window.location.href = "userDashboard.html";      // new user dashboard
+        window.location.href = "userDashboard/userDashboard.html";
       }
     });
   }
 
-  // ... keep your other init functions calls (initPackagesPage, initEmployeesPage, etc.)
-});
-
-  /* -------- COMMON LOGOUT -------- */
+  /* -------- COMMON LOGOUT BUTTONS -------- */
   const logoutButtons = [
     document.getElementById("logoutBtnDash"),
     document.getElementById("logoutBtnPackages"),
@@ -33,7 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   logoutButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-      window.location.href = "login.html";
+      localStorage.removeItem("cht_current_username");
+      window.location.href = "../../HTML/log_in.html";
     });
   });
 
@@ -42,36 +42,12 @@ document.addEventListener("DOMContentLoaded", () => {
     initPackagesPage();
   }
 
-  // ... keep the rest of your file (login, logout, employees, etc.)
-
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const role = document.getElementById("role").value;
-      // Demo only
-      window.location.href = "dashboard.html";
-    });
-  }
-
-  const logoutButtons = [
-    document.getElementById("logoutBtnDash"),
-    document.getElementById("logoutBtnPackages"),
-    document.getElementById("logoutBtnEmployees")
-  ].filter(Boolean);
-
-  logoutButtons.forEach(btn =>
-    btn.addEventListener("click", () => (window.location.href = "login.html"))
-  );
-
-  if (document.getElementById("packagesTable")) {
-    initPackagesPage();
-  }
+  /* -------- EMPLOYEES PAGE -------- */
   if (document.getElementById("employeesTable")) {
-    initEmployeesPage(); // reuse from previous answer
+    initEmployeesPage();
   }
 });
+
 
 /* ========== TOUR PACKAGES PAGE (DETAILED) ========== */
 function initPackagesPage() {
@@ -374,10 +350,10 @@ function initPackagesPage() {
 /* ========== EMPLOYEES PAGE (same as earlier) ========== */
 /* (keep your existing initEmployeesPage from the previous answer) */
 
-  /* -------- EMPLOYEES PAGE -------- */
-  if (document.getElementById("employeesTable")) {
-    initEmployeesPage();
-  }
+/* -------- EMPLOYEES PAGE -------- */
+if (document.getElementById("employeesTable")) {
+  initEmployeesPage();
+}
 
 
 /* ================== TOUR PACKAGES ================== */

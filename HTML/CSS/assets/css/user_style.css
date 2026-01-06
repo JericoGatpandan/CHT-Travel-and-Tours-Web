@@ -85,16 +85,16 @@
   gap: 10px;
   padding: 10px 14px;
   border-radius: 999px;
-  color: #cbd5f5;
+  color: #cbd5f5; /* restore previous text color */
   text-decoration: none;
   font-size: 14px;
   margin-bottom: 4px;
 }
 .sidebar-item:hover {
-  background: rgba(255,255,255,0.06);
+  background: rgba(15,59,87,0.08); /* darker blue hover */
 }
 .sidebar-item.active {
-  background: var(--user-blue);
+  background: #0f3b57; /* darker navy blue for active background */
   color: #fff;
 }
 .sidebar-icon {
@@ -805,4 +805,163 @@ tbody tr:hover {
   .accommodations-grid {
     grid-template-columns: 1fr;
   }
+}
+
+// userTransportaion.css
+
+/* ===== TRANSPORTATION PAGE ===== */
+
+.transport-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.transport-header-left .content-title {
+  margin-bottom: 2px;
+}
+.transport-header-right {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Search row */
+.transport-search-row {
+  margin-bottom: 12px;
+}
+.transport-search-wrap {
+  position: relative;
+  max-width: 420px;
+}
+.transport-search-wrap input {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid #d1d5e6;
+  padding: 10px 14px 10px 34px;
+  font-size: 13px;
+  outline: none;
+  background: #ffffff;
+}
+.transport-search-wrap input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+}
+.transport-search-wrap .search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #9ca3b7;
+}
+
+/* Table scroll area like screenshot */
+.transport-table-wrapper {
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+/* Make price/day green */
+.transport-price {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+// userPayments.css
+
+/* ===== PAYMENTS PAGE ===== */
+
+.payments-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.payments-header-right {
+  display: flex;
+  align-items: center;
+}
+.payments-add-btn {
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* stat row reuse */
+.payments-stats-row {
+  margin-bottom: 10px;
+}
+.payments-stat-amount {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #16a34a;
+}
+.payments-stat-amount.pending {
+  color: #f59e0b;
+}
+
+/* search bar */
+.payments-search-row {
+  margin-bottom: 10px;
+}
+.payments-search-wrap {
+  position: relative;
+  max-width: 420px;
+}
+.payments-search-wrap input {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid #d1d5e6;
+  padding: 10px 14px 10px 34px;
+  font-size: 13px;
+  outline: none;
+  background: #ffffff;
+}
+.payments-search-wrap input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+}
+.payments-search-wrap .search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #9ca3b7;
+}
+
+/* table wrapper spacing */
+.payments-table-wrapper {
+  margin-top: 4px;
+}
+
+/* amount color in table */
+.payment-amount {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* status pills */
+.payment-status-pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.payment-status-paid {
+  background: rgba(34,197,94,0.12);
+  color: #16a34a;
+}
+.payment-status-pending {
+  background: rgba(234,179,8,0.18);
+  color: #b45309;
+}
+.payment-status-failed {
+  background: rgba(239,68,68,0.18);
+  color: #b91c1c;
 }

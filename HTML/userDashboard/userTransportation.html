@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CHT Travel & Tour Management - Accommodations</title>
+  <title>CHT Travel & Tour Management - Transportation</title>
   <link rel="stylesheet" href="../CSS/assets/css/user_style.css">
   <link rel="stylesheet" href="assets/css/user-booking.css">
 </head>
@@ -18,7 +18,8 @@
     </div>
 
     <nav class="sidebar-menu">
-       <button class="btn-new-booking" onclick="window.location.href='Bookings/bookings1.html'">+ New Booking</button>
+      <button class="btn-new-booking" onclick="window.location.href='Bookings/bookings1.html'">+ New Booking</button>
+
 
       <a href="userDashboard.html" class="sidebar-item">
         <span class="sidebar-icon">🏠</span> Dashboard
@@ -29,16 +30,16 @@
       <a href="userClients.html" class="sidebar-item">
         <span class="sidebar-icon">👤</span> Clients
       </a>
-      <a href="userTourPackage.html" class="sidebar-item">
+      <a href="userTourPackages.html" class="sidebar-item">
         <span class="sidebar-icon">🧳</span> Tour Packages
       </a>
       <a href="userTrips.html" class="sidebar-item">
         <span class="sidebar-icon">📍</span> Trips
       </a>
-      <a href="userHotel.html" class="sidebar-item active">
+      <a href="userHotel.html" class="sidebar-item">
         <span class="sidebar-icon">🏨</span> Hotel
       </a>
-      <a href="userTransportation.html" class="sidebar-item">
+      <a href="userTransportation.html" class="sidebar-item active">
         <span class="sidebar-icon">🚐</span> Transportation
       </a>
       <a href="userPayments.html" class="sidebar-item">
@@ -54,33 +55,47 @@
   <!-- MAIN CONTENT -->
   <main class="user-content">
     <!-- HEADER -->
-    <header class="content-header accommodations-header">
-      <div class="accommodations-header-left">
-        <h1 class="content-title">Accommodations</h1>
+    <header class="content-header transport-header">
+      <div class="transport-header-left">
+        <h1 class="content-title">Transportation</h1>
         <p class="content-subtitle">
-          Browse available hotels and accommodations
+          Manage vehicle fleet and transportation options
         </p>
       </div>
-      <div class="accommodations-header-right">
-        <span id="hotelsCountLabel">0 accommodations</span>
+      <div class="transport-header-right">
+        <span id="transportCountLabel">0 vehicles</span>
       </div>
     </header>
 
-    <!-- SEARCH BAR -->
-    <section class="accommodations-search-row">
-      <div class="accommodations-search-wrap">
+    <!-- SEARCH -->
+    <section class="transport-search-row">
+      <div class="transport-search-wrap">
         <span class="search-icon">🔍</span>
         <input
           type="text"
-          id="hotelsSearch"
-          placeholder="Search by hotel name or location..."
+          id="transportSearch"
+          placeholder="Search by vehicle type or provider..."
         >
       </div>
     </section>
 
-    <!-- HOTEL CARDS GRID -->
-    <section id="hotelsGrid" class="accommodations-grid">
-      <!-- cards rendered by JS -->
+    <!-- TABLE -->
+    <section class="table-wrapper big transport-table-wrapper">
+      <table id="transportTable">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Vehicle Type</th>
+          <th>Capacity</th>
+          <th>Plate Number</th>
+          <th>Provider</th>
+          <th>Price/Day</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- rows from JS -->
+        </tbody>
+      </table>
     </section>
   </main>
 
