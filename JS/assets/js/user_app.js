@@ -1,0 +1,892 @@
+// Simple front-end behavior for the USER dashboard (no backend)
+
+// Demo recent bookings data
+const demoBookings = [
+  {
+    id: 3,
+    client: "Sunrise Corp.",
+    destination: "Bali, Indonesia",
+    package: "Bali 4D3N Christmas Tour",
+    startDate: "2025-12-25",
+    endDate: "2025-12-25",
+    status: "Completed"
+  },
+  {
+    id: 1,
+    client: "Carlos Ramirez",
+    destination: "Hokkaido, Japan",
+    package: "Hokkaido Icebreaker + Sapporo Snow F...",
+    startDate: "2026-02-02",
+    endDate: "2026-02-02",
+    status: "Upcoming"
+  },
+  {
+    id: 5,
+    client: "Andrea Bautista",
+    destination: "Hokkaido, Japan",
+    package: "Hokkaido Icebreaker + Sapporo Snow F...",
+    startDate: "2026-02-02",
+    endDate: "2026-02-02",
+    status: "Upcoming"
+  }
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Show username if stored by login
+  const userNameSpan = document.getElementById("userNameLabel");
+  const storedName = localStorage.getItem("cht_current_username");
+  if (userNameSpan && storedName) {
+    userNameSpan.textContent = storedName;
+  }
+
+  // Populate bookings table
+  const tbody = document.querySelector("#userBookingsTable tbody");
+  if (tbody) {
+    demoBookings.forEach(b => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${b.id}</td>
+        <td>${b.client}</td>
+        <td>${b.destination}</td>
+        <td>${b.package}</td>
+        <td>${b.startDate}</td>
+        <td>${b.endDate}</td>
+        <td>
+          <span class="status-pill ${
+            b.status === "Completed" ? "status-completed" : "status-upcoming"
+          }">${b.status}</span>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Logout button
+  const logoutBtn = document.getElementById("userLogoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("cht_current_username");
+      window.location.href = "login.html";
+    });
+  }
+
+  // New booking buttons (banner + sidebar)
+  document.querySelectorAll(".btn-banner-booking, .btn-new-booking").forEach(btn => {
+    btn.addEventListener("click", () => {
+      alert("New Booking modal / page would open here (demo only).");
+    });
+  });
+});
+
+// ... existing code ...
+
+document.addEventListener("DOMContentLoaded", () => {
+  // ... existing username / bookings table code ...
+
+  // New booking buttons (banner + sidebar)
+  document.querySelectorAll(".btn-banner-booking, .btn-new-booking").forEach(btn => {
+    btn.addEventListener("click", () => {
+      window.location.href = "userBooking-step1.html";   // <-- go to step 1 page
+    });
+  });
+
+  // Logout button
+  const logoutBtn = document.getElementById("userLogoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("cht_current_username");
+      window.location.href = "login.html";
+    });
+  }
+});
+
+// userBookings.JS
+
+// Bookings list page: reads bookings saved in localStorage by step 6
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tbody = document.querySelector("#bookingsTable tbody");
+  const searchInput = document.getElementById("bookingsSearch");
+  const searchBtn = document.getElementById("bookingsSearchBtn");
+
+  const statTotal = document.getElementById("statTotal");
+  const statConfirmed = document.getElementById("statConfirmed");
+  const statCancelled = document.getElementById("statCancelled");
+  const countLabel = document.getElementById("bookingsCountLabel");
+
+  const logoutBtn = document.getElementById("userLogoutBtn");
+  const sidebarNewBookingBtn = document.getElementById("sidebarNewBookingBtn");
+  const newBookingBtnTop = document.getElementById("newBookingBtnTop");
+
+  // Load all bookings
+  let bookings = JSON.parse(localStorage.getItem("cht_bookings") || "[]");
+  let filteredBookings = [...bookings];
+
+  function formatDate(iso) {
+    if (!iso) return "";
+    // Display as e.g. Feb 02, 2026
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric"
+    });
+  }
+
+  function renderStats() {
+    statTotal.textContent = bookings.length;
+
+    const confirmed = bookings.filter(b => b.status === "Confirmed").length;
+    const cancelled = bookings.filter(b => b.status === "Cancelled").length;
+
+    statConfirmed.textContent = confirmed;
+    statCancelled.textContent = cancelled;
+
+    countLabel.textContent = `${bookings.length} booking(s)`;
+  }
+
+  function renderTable() {
+    tbody.innerHTML = "";
+    filteredBookings.forEach(b => {
+      const tr = document.createElement("tr");
+      const statusClass =
+        b.status === "Cancelled"
+          ? "status-cancelled"
+          : b.status === "Completed"
+          ? "status-completed"
+          : "status-upcoming";
+
+      tr.innerHTML = `
+        <td>${b.id}</td>
+        <td>${b.client}</td>
+        <td>${b.destination || ""}</td>
+        <td>${b.packageName || ""}</td>
+        <td>${formatDate(b.startDate)}</td>
+        <td>${formatDate(b.endDate)}</td>
+        <td>
+          <span class="status-pill-booking ${statusClass}">
+            ${b.status}
+          </span>
+        </td>
+        <td>
+          <button class="booking-action-btn" data-action="view" data-id="${b.id}">👁</button>
+          <button class="booking-action-btn" data-action="cancel" data-id="${b.id}">✖</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function applySearch() {
+    const q = (searchInput.value || "").toLowerCase();
+    if (!q) {
+      filteredBookings = [...bookings];
+    } else {
+      filteredBookings = bookings.filter(b =>
+        `${b.client} ${b.destination} ${b.packageName}`
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+    renderTable();
+  }
+
+  // Initial render
+  renderStats();
+  renderTable();
+
+  // Search
+  searchBtn.addEventListener("click", applySearch);
+  searchInput.addEventListener("keyup", e => {
+    if (e.key === "Enter") applySearch();
+  });
+
+  // Actions (view / cancel – demo)
+  tbody.addEventListener("click", e => {
+    const btn = e.target.closest(".booking-action-btn");
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+    const booking = bookings.find(b => b.id === id);
+    if (!booking) return;
+
+    const action = btn.dataset.action;
+    if (action === "view") {
+      alert(
+        `Booking ${booking.id}\nClient: ${booking.client}\nDestination: ${booking.destination}\nPackage: ${booking.packageName}\nStatus: ${booking.status}`
+      );
+    } else if (action === "cancel") {
+      if (booking.status === "Cancelled") {
+        alert("This booking is already cancelled.");
+        return;
+      }
+      const ok = confirm(
+        `Cancel booking ${booking.id} for ${booking.client}?`
+      );
+      if (!ok) return;
+
+      booking.status = "Cancelled";
+      // Save
+      localStorage.setItem("cht_bookings", JSON.stringify(bookings));
+
+      renderStats();
+      applySearch();
+    }
+  });
+
+  // New booking buttons
+  function goNewBooking() {
+    window.location.href = "/HTML/userDashboard/Bookings/bookings1.html";  // absolute from root
+  }
+  if (sidebarNewBookingBtn) {
+    sidebarNewBookingBtn.addEventListener("click", goNewBooking);
+  }
+  if (newBookingBtnTop) {
+    newBookingBtnTop.addEventListener("click", goNewBooking);
+  }
+
+  // Logout
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("cht_current_username");
+      window.location.href = "/HTML/login.html";
+    });
+  }
+});
+
+
+//render
+
+function renderStats() {
+  statTotal.textContent = bookings.length;
+
+  const confirmed = bookings.filter(b => b.status === "Confirmed").length;
+  const cancelled = bookings.filter(b => b.status === "Cancelled").length;
+
+  statConfirmed.textContent = confirmed;
+  statCancelled.textContent = cancelled;
+
+  const label = document.getElementById("bookingsCountLabel");
+  if (label) {
+    label.textContent = `${bookings.length} booking${bookings.length === 1 ? "" : "s"}`;
+  }
+}
+
+//userClients.js
+
+// assets/js/user-clients.js
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tbody = document.querySelector("#clientsTable tbody");
+  const searchInput = document.getElementById("clientsSearch");
+
+  const addClientBtn = document.getElementById("addClientBtn");
+  const sidebarNewBookingBtn = document.getElementById("sidebarNewBookingBtn");
+  const logoutBtn = document.getElementById("userLogoutBtn");
+
+  // Modal elements
+  const modalOverlay = document.getElementById("clientModalOverlay");
+  const modalTitle = document.getElementById("clientModalTitle");
+  const closeModalBtn = document.getElementById("closeClientModalBtn");
+  const cancelClientBtn = document.getElementById("cancelClientBtn");
+  const clientForm = document.getElementById("clientForm");
+
+  const idField = document.getElementById("clientId");
+  const nameField = document.getElementById("clientName");
+  const emailField = document.getElementById("clientEmail");
+  const contactField = document.getElementById("clientContact");
+  const addressField = document.getElementById("clientAddress");
+  const typeField = document.getElementById("clientType");
+
+  // -------- Seed data if none --------
+  let clients = JSON.parse(localStorage.getItem("cht_clients") || "[]");
+
+  if (!clients.length) {
+    clients = [
+      { id: 1, name: "Carlos Ramirez", email: "carlos@example.com", contact: "09180000001", address: "Manila, PH", type: "REGULAR", registered: "2025-01-05" },
+      { id: 2, name: "Jenny Villanueva", email: "jenny@example.com", contact: "09180000002", address: "Quezon City, PH", type: "REGULAR", registered: "2025-01-10" },
+      { id: 3, name: "Sunrise Corp.", email: "travel@sunrisecorp.com", contact: "09180000003", address: "Makati, PH", type: "CORPORATE", registered: "2025-01-15" },
+      { id: 4, name: "Miguel Santos", email: "miguel.s@example.com", contact: "09180000004", address: "Cebu City, PH", type: "REGULAR", registered: "2025-02-01" },
+      { id: 5, name: "Andrea Bautista", email: "andrea.b@example.com", contact: "09180000005", address: "Davao City, PH", type: "VIP", registered: "2025-02-10" },
+      { id: 6, name: "Frence", email: "frence@gmail.com", contact: "09510986858", address: "Not specified", type: "REGULAR", registered: "2026-01-06" }
+    ];
+    localStorage.setItem("cht_clients", JSON.stringify(clients));
+  }
+
+  let filteredClients = [...clients];
+
+  function formatDate(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric"
+    });
+  }
+
+  function typeBadge(type) {
+    const t = (type || "REGULAR").toUpperCase();
+    if (t === "CORPORATE") {
+      return `<span class="client-type-badge client-type-corporate">CORPORATE</span>`;
+    }
+    if (t === "VIP") {
+      return `<span class="client-type-badge client-type-vip">VIP</span>`;
+    }
+    return `<span class="client-type-badge client-type-regular">REGULAR</span>`;
+  }
+
+  function renderClients() {
+    tbody.innerHTML = "";
+    filteredClients.forEach(c => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${c.id}</td>
+        <td>${c.name}</td>
+        <td>${c.email || ""}</td>
+        <td>${c.contact || ""}</td>
+        <td>${c.address || ""}</td>
+        <td>${typeBadge(c.type)}</td>
+        <td>${formatDate(c.registered)}</td>
+        <td>
+          <button class="client-action-btn" data-action="edit" data-id="${c.id}">✎</button>
+          <button class="client-action-btn delete" data-action="delete" data-id="${c.id}">🗑</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  renderClients();
+
+  // -------- Search --------
+  function applySearch() {
+    const q = (searchInput.value || "").toLowerCase();
+    if (!q) {
+      filteredClients = [...clients];
+    } else {
+      filteredClients = clients.filter(c =>
+        `${c.name} ${c.email} ${c.contact}`.toLowerCase().includes(q)
+      );
+    }
+    renderClients();
+  }
+
+  searchInput.addEventListener("keyup", e => {
+    if (e.key === "Enter") applySearch();
+  });
+
+  // -------- Modal open/close --------
+  function openModal(mode, client) {
+    modalOverlay.classList.remove("hidden");
+    if (mode === "add") {
+      modalTitle.textContent = "Add New Client";
+      clientForm.reset();
+      idField.value = "";
+      typeField.value = "REGULAR";
+    } else if (mode === "edit" && client) {
+      modalTitle.textContent = "Edit Client";
+      idField.value = client.id;
+      nameField.value = client.name || "";
+      emailField.value = client.email || "";
+      contactField.value = client.contact || "";
+      addressField.value = client.address || "";
+      typeField.value = (client.type || "REGULAR").toUpperCase();
+    }
+  }
+
+  function closeModal() {
+    modalOverlay.classList.add("hidden");
+  }
+
+  addClientBtn.addEventListener("click", () => openModal("add"));
+  closeModalBtn.addEventListener("click", closeModal);
+  cancelClientBtn.addEventListener("click", closeModal);
+
+  // Click background to close
+  modalOverlay.addEventListener("click", e => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  // -------- Table actions (edit/delete) --------
+  tbody.addEventListener("click", e => {
+    const btn = e.target.closest(".client-action-btn");
+    if (!btn) return;
+
+    const id = parseInt(btn.dataset.id, 10);
+    const client = clients.find(c => c.id === id);
+    if (!client) return;
+
+    if (btn.dataset.action === "edit") {
+      openModal("edit", client);
+    } else if (btn.dataset.action === "delete") {
+      if (confirm(`Delete client ${client.name}?`)) {
+        clients = clients.filter(c => c.id !== id);
+        localStorage.setItem("cht_clients", JSON.stringify(clients));
+        filteredClients = [...clients];
+        renderClients();
+      }
+    }
+  });
+
+  // -------- Save client (add or edit) --------
+  clientForm.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const idVal = idField.value.trim();
+    const data = {
+      id: idVal ? parseInt(idVal, 10) : getNextClientId(),
+      name: nameField.value.trim(),
+      email: emailField.value.trim(),
+      contact: contactField.value.trim(),
+      address: addressField.value.trim() || "Not specified",
+      type: typeField.value || "REGULAR",
+      registered: idVal
+        ? (clients.find(c => c.id === parseInt(idVal, 10))?.registered || new Date().toISOString().slice(0,10))
+        : new Date().toISOString().slice(0, 10)
+    };
+
+    if (!data.name) {
+      alert("Name is required.");
+      return;
+    }
+
+    if (idVal) {
+      const index = clients.findIndex(c => c.id === data.id);
+      if (index > -1) clients[index] = data;
+    } else {
+      clients.push(data);
+    }
+
+    localStorage.setItem("cht_clients", JSON.stringify(clients));
+    filteredClients = [...clients];
+    renderClients();
+    closeModal();
+  });
+
+  function getNextClientId() {
+    return clients.length ? Math.max(...clients.map(c => c.id)) + 1 : 1;
+  }
+
+  // -------- Sidebar New Booking + Logout --------
+  if (sidebarNewBookingBtn) {
+    sidebarNewBookingBtn.addEventListener("click", () => {
+      window.location.href = "userBooking-step1.html";
+    });
+  }
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("cht_current_username");
+      window.location.href = "login.html";
+    });
+  }
+});
+
+//userTourPackage.js
+
+// assets/js/user-tour-packages.js
+document.addEventListener("DOMContentLoaded", () => {
+  const grid = document.getElementById("packagesGrid");
+  const searchInput = document.getElementById("packagesSearch");
+  const countLabel = document.getElementById("packagesCountLabel");
+
+  const sidebarNewBookingBtn = document.getElementById("sidebarNewBookingBtn");
+  const logoutBtn = document.getElementById("userLogoutBtn");
+
+  // Load packages from localStorage
+  let packages = JSON.parse(localStorage.getItem("cht_packages") || "[]");
+
+  // Seed demo data if none (optional)
+  if (!packages.length) {
+    packages = [
+      {
+        id: 10,
+        name: "Hokkaido Icebreaker + Sapporo Snow Festival",
+        destination: "Hokkaido, Japan",
+        durationDays: 6,
+        maxPax: 30,
+        price: 2288,
+        status: "Active",
+        description: "Drift ice cruise, penguins, snow festival in Hokkaido",
+        inclusions: "flights, hotel, tours, some meals"
+      },
+      {
+        id: 11,
+        name: "Hong Kong & Macau Getaway",
+        destination: "Hong Kong & Macau",
+        durationDays: 4,
+        maxPax: 40,
+        price: 449,
+        status: "Active",
+        description: "City highlights of Hong Kong & Macau with optional Disney",
+        inclusions: "hotel, tours, some meals"
+      },
+      {
+        id: 12,
+        name: "Bali 4D3N Christmas Tour",
+        destination: "Bali, Indonesia",
+        durationDays: 4,
+        maxPax: 20,
+        price: 28888,
+        status: "Active",
+        description: "Bali Christmas special visiting famous temples and waterfalls",
+        inclusions: "flights, hotel, tours, breakfast"
+      },
+      {
+        id: 13,
+        name: "Taiwan Taipei + Taichung 4D3N",
+        destination: "Taipei & Taichung, Taiwan",
+        durationDays: 4,
+        maxPax: 35,
+        price: 27988,
+        status: "Active",
+        description: "Taipei and Taichung highlights, flower garden and night mkts",
+        inclusions: "flights, hotel, tours, some meals"
+      }
+    ];
+    localStorage.setItem("cht_packages", JSON.stringify(packages));
+  }
+
+  let filteredPackages = [...packages];
+
+  function formatPrice(v) {
+    return "₱" + Number(v || 0).toLocaleString("en-PH", { minimumFractionDigits: 0 });
+  }
+
+  function renderCount() {
+    if (!countLabel) return;
+    const total = filteredPackages.length;
+    countLabel.textContent = `${total} package${total === 1 ? "" : "s"}`;
+  }
+
+  function renderPackages() {
+    grid.innerHTML = "";
+    filteredPackages.forEach(pkg => {
+      const card = document.createElement("article");
+      card.className = "user-package-card";
+
+      const duration = pkg.durationDays || 0;
+      const maxPax = pkg.maxPax || 0;
+      const status = (pkg.status || "Active").toLowerCase();
+
+      card.innerHTML = `
+        <div class="user-package-card-header">
+          <h3>${pkg.destination || "Destination"}</h3>
+        </div>
+        <div class="user-package-card-body">
+          <div class="user-package-chip">${pkg.destination || "Destination"}</div>
+          <div class="user-package-title">${pkg.name || "Untitled Package"}</div>
+          <div class="user-package-description">
+            ${pkg.description || ""}
+          </div>
+          <div class="user-package-meta">
+            <span>📅 ${duration} Days</span>
+            <span>👥 Max ${maxPax} pax</span>
+          </div>
+          <div class="user-package-inclusions">
+            ✓ ${pkg.inclusions || "flights • hotel • tours"}
+          </div>
+          <div class="user-package-price-row">
+            <div class="user-package-price">
+              ${formatPrice(pkg.price)} <span class="unit">/ person</span>
+            </div>
+            <div class="user-package-status">
+              ${status === "active" ? "Active" : status}
+            </div>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    renderCount();
+  }
+
+  renderPackages();
+
+  // Search filter
+  function applySearch() {
+    const q = (searchInput.value || "").toLowerCase();
+    if (!q) {
+      filteredPackages = [...packages];
+    } else {
+      filteredPackages = packages.filter(p =>
+        `${p.name} ${p.destination}`.toLowerCase().includes(q)
+      );
+    }
+    renderPackages();
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("keyup", e => {
+      if (e.key === "Enter") applySearch();
+    });
+  }
+
+  // Sidebar / logout
+  if (sidebarNewBookingBtn) {
+    sidebarNewBookingBtn.addEventListener("click", () => {
+      window.location.href = "userBooking-step1.html";
+    });
+  }
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("cht_current_username");
+      window.location.href = "login.html";
+    });
+  }
+});
+
+localStorage.setItem("cht_packages", JSON.stringify(packages));
+
+//userTrips.js
+
+// assets/js/user-trips.js
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tbody = document.querySelector("#tripsTable tbody");
+  const searchInput = document.getElementById("tripsSearch");
+  const countLabel = document.getElementById("tripsCountLabel");
+
+  const sidebarNewBookingBtn = document.getElementById("sidebarNewBookingBtn");
+  const logoutBtn = document.getElementById("userLogoutBtn");
+
+  // Load trips from localStorage
+  let trips = JSON.parse(localStorage.getItem("cht_trips") || "[]");
+
+  // Seed demo data if none yet
+  if (!trips.length) {
+    trips = [
+      { id: 51, name: "Arrival & City Intro", description: "Arrival in Bali, short city tour", location: "Bali", startDate: "2025-12-25", endDate: "2025-12-25", status: "Active" },
+      { id: 52, name: "Ulun Danu & Beratan", description: "Ulun Danu Temple & Beratan Lake", location: "Bali", startDate: "2025-12-26", endDate: "2025-12-26", status: "Active" },
+      { id: 53, name: "Tanah Lot & Waterfalls", description: "Tanah Lot & Tukad Waterfall", location: "Bali", startDate: "2025-12-27", endDate: "2025-12-27", status: "Active" },
+      { id: 54, name: "Free Time & Departure", description: "Free time then airport transfer", location: "Bali", startDate: "2025-12-28", endDate: "2025-12-28", status: "Active" },
+      { id: 31, name: "Arrival & Bibai Snowland", description: "Arrival in Hokkaido + Bibai Snowland", location: "Hokkaido", startDate: "2026-02-02", endDate: "2026-02-02", status: "Active" }
+      // ...you can add more demo records if desired
+    ];
+    localStorage.setItem("cht_trips", JSON.stringify(trips));
+  }
+
+  let filteredTrips = [...trips];
+
+  function formatDate(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric"
+    });
+  }
+
+  function renderCount() {
+    const total = filteredTrips.length;
+    if (countLabel) {
+      countLabel.textContent = `${total} trip${total === 1 ? "" : "s"}`;
+    }
+  }
+
+  function renderTrips() {
+    tbody.innerHTML = "";
+    filteredTrips.forEach(t => {
+      const tr = document.createElement("tr");
+      const statusClass =
+        (t.status || "Active").toLowerCase() === "active"
+          ? "trip-status-active"
+          : "trip-status-inactive";
+
+      tr.innerHTML = `
+        <td>${t.id}</td>
+        <td>${t.name}</td>
+        <td>${t.description || ""}</td>
+        <td>${t.location || ""}</td>
+        <td>${formatDate(t.startDate)}</td>
+        <td>${formatDate(t.endDate)}</td>
+        <td>
+          <span class="trip-status-pill ${statusClass}">
+            ${t.status || "Active"}
+          </span>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    renderCount();
+  }
+
+  renderTrips();
+
+  // Search by name or location
+  function applySearch() {
+    const q = (searchInput.value || "").toLowerCase();
+    if (!q) {
+      filteredTrips = [...trips];
+    } else {
+      filteredTrips = trips.filter(t =>
+        `${t.name} ${t.location}`.toLowerCase().includes(q)
+      );
+    }
+    renderTrips();
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("keyup", e => {
+      if (e.key === "Enter") applySearch();
+    });
+  }
+
+  // New booking shortcut from sidebar
+  if (sidebarNewBookingBtn) {
+    sidebarNewBookingBtn.addEventListener("click", () => {
+      window.location.href = "userBooking-step1.html";
+    });
+  }
+
+  // Logout
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("cht_current_username");
+      window.location.href = "log_in.html";
+    });
+  }
+});
+
+// userHotel.js
+
+// assets/js/user-hotel.js
+
+document.addEventListener("DOMContentLoaded", () => {
+  const grid = document.getElementById("hotelsGrid");
+  const searchInput = document.getElementById("hotelsSearch");
+  const countLabel = document.getElementById("hotelsCountLabel");
+
+  const sidebarNewBookingBtn = document.getElementById("sidebarNewBookingBtn");
+  const logoutBtn = document.getElementById("userLogoutBtn");
+
+  // Load from localStorage
+  let hotels = JSON.parse(localStorage.getItem("cht_hotels") || "[]");
+
+  // Seed demo data if none
+  if (!hotels.length) {
+    hotels = [
+      {
+        id: 1,
+        name: "Bali Beach Resort",
+        location: "Kuta, Bali",
+        phone: "+62-361-000003",
+        roomType: "Deluxe Room",
+        roomsAvailable: 60,
+        facilities: "Pool, Beachfront, WiFi"
+      },
+      {
+        id: 2,
+        name: "Hong Kong City Hotel",
+        location: "Kowloon, Hong Kong",
+        phone: "+852-0000002",
+        roomType: "Standard Room",
+        roomsAvailable: 120,
+        facilities: "WiFi, Breakfast"
+      },
+      {
+        id: 3,
+        name: "Sapporo Snow Hotel",
+        location: "Sapporo, Hokkaido",
+        phone: "+81-11-000001",
+        roomType: "Standard Room",
+        roomsAvailable: 80,
+        facilities: "WiFi, Breakfast, Heater"
+      },
+      {
+        id: 4,
+        name: "Taichung Garden Hotel",
+        location: "Taichung",
+        phone: "+886-4-000005",
+        roomType: "Standard Room",
+        roomsAvailable: 70,
+        facilities: "WiFi, Breakfast"
+      },
+      {
+        id: 5,
+        name: "Taipei Downtown Hotel",
+        location: "Taipei",
+        phone: "+886-2-000004",
+        roomType: "Standard Room",
+        roomsAvailable: 100,
+        facilities: "WiFi, Breakfast"
+      }
+    ];
+    localStorage.setItem("cht_hotels", JSON.stringify(hotels));
+  }
+
+  let filteredHotels = [...hotels];
+
+  function renderCount() {
+    const total = filteredHotels.length;
+    if (countLabel) {
+      countLabel.textContent = `${total} accommodation${total === 1 ? "" : "s"}`;
+    }
+  }
+
+  function renderHotels() {
+    grid.innerHTML = "";
+    filteredHotels.forEach(h => {
+      const card = document.createElement("article");
+      card.className = "hotel-card";
+
+      card.innerHTML = `
+        <div class="hotel-card-header">
+          <div class="hotel-card-icon">▢</div>
+          <div class="hotel-card-name">${h.name || "Hotel"}</div>
+        </div>
+        <div class="hotel-card-meta">${h.location || ""}</div>
+        <div class="hotel-card-meta">${h.phone || ""}</div>
+        <div class="hotel-card-room-type">${h.roomType || "Standard Room"}</div>
+        <div class="hotel-card-availability">
+          ${h.roomsAvailable || 0} rooms available
+        </div>
+        <div class="hotel-card-facilities">
+          ✓ ${h.facilities || ""}
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    renderCount();
+  }
+
+  renderHotels();
+
+  // Search filter
+  function applySearch() {
+    const q = (searchInput.value || "").toLowerCase();
+    if (!q) {
+      filteredHotels = [...hotels];
+    } else {
+      filteredHotels = hotels.filter(h =>
+        `${h.name} ${h.location}`.toLowerCase().includes(q)
+      );
+    }
+    renderHotels();
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("keyup", e => {
+      if (e.key === "Enter") applySearch();
+    });
+  }
+
+  // Sidebar New Booking
+  if (sidebarNewBookingBtn) {
+    sidebarNewBookingBtn.addEventListener("click", () => {
+      window.location.href = "userBooking-step1.html";
+    });
+  }
+
+  // Logout
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("cht_current_username");
+      window.location.href = "login.html";
+    });
+  }
+});

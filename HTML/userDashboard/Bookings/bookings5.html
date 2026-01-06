@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CHT Travel & Tour Management - New Booking (Step 5)</title>
+  <link rel="stylesheet" href="../../CSS/assets/css/user_style.css">
+  <link rel="stylesheet" href="../../CSS/assets/userBookingsCss/bookings.css">
+</head>
+<body class="user-body">
+  <!-- SIDEBAR -->
+  <aside class="user-sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-circle">CHT</div>
+      <div class="logo-text">
+        <span>CHT Travel & Tours</span>
+        <small>User Panel</small>
+      </div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <button class="btn-new-booking" id="sidebarNewBookingBtn">+ New Booking</button>
+
+      <a href="userDashboard.html" class="sidebar-item">
+        <span class="sidebar-icon">🏠</span> Dashboard
+      </a>
+      <a href="userBooking-step1.html" class="sidebar-item active">
+        <span class="sidebar-icon">🧾</span> New Booking
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">📅</span> Bookings
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">👤</span> Clients
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">🧳</span> Tour Packages
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">📍</span> Trips
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">🏨</span> Hotel
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">🚐</span> Transportation
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">💳</span> Payments
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button id="userLogoutBtn" class="logout-link">⟵ Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="user-content booking-content">
+    <!-- STEP BAR -->
+    <section class="booking-steps">
+      <div class="step-item completed">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Customer</span>
+      </div>
+      <div class="step-line"></div>
+
+      <div class="step-item completed">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Package</span>
+      </div>
+      <div class="step-line"></div>
+
+      <div class="step-item completed">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Add-ons</span>
+      </div>
+      <div class="step-line"></div>
+
+      <div class="step-item completed">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Hotel</span>
+      </div>
+      <div class="step-line"></div>
+
+      <div class="step-item active">
+        <div class="step-circle">5</div>
+        <span class="step-label">Transport</span>
+      </div>
+      <div class="step-line"></div>
+
+      <div class="step-item">
+        <div class="step-circle">6</div>
+        <span class="step-label">Confirm</span>
+      </div>
+    </section>
+
+    <!-- MAIN LAYOUT -->
+    <section class="booking-main-layout">
+      <!-- LEFT: TRANSPORT LIST + FILTER -->
+      <div class="booking-form-area">
+        <h1 class="booking-title">Choose Transportation</h1>
+        <p class="booking-subtitle">
+          Select a vehicle that accommodates your group size.
+        </p>
+
+        <!-- Filter by type (visual) -->
+        <section class="transport-filter card">
+          <span class="filter-label">Filter by Type:</span>
+          <label class="filter-option">
+            <input type="radio" name="transportFilter" value="all" checked> All
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="transportFilter" value="sedan"> 🚗 Sedan (4 seats)
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="transportFilter" value="van"> 🚐 Van (10 seats)
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="transportFilter" value="bus"> 🚌 Bus (50 seats)
+          </label>
+        </section>
+
+        <section class="transport-list card">
+          <div id="transportListInner">
+            <!-- rows rendered by JS -->
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT: SUMMARY -->
+      <aside class="booking-summary">
+        <div class="summary-header">
+          <h3>Booking Summary</h3>
+          <p class="summary-progress-label">
+            <span class="summary-dot"></span>
+            <span id="summaryPercent">80% Complete</span>
+          </p>
+        </div>
+
+        <div class="summary-items">
+          <div class="summary-item">
+            <div class="summary-icon">👤</div>
+            <div>
+              <div class="summary-label">Customer</div>
+              <div class="summary-value" id="summaryCustomer">Not set</div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <div class="summary-icon">🧳</div>
+            <div>
+              <div class="summary-label">Package</div>
+              <div class="summary-value" id="summaryPackage">Not selected</div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <div class="summary-icon">🏨</div>
+            <div>
+              <div class="summary-label">Hotel</div>
+              <div class="summary-value" id="summaryHotel">Not selected</div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <div class="summary-icon">🚐</div>
+            <div>
+              <div class="summary-label">Transport</div>
+              <div class="summary-value" id="summaryTransport">Not selected</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-progress-circle">
+          <div class="circle-outer">
+            <div class="circle-inner">
+              <span id="summaryStepFraction">4/5</span>
+            </div>
+          </div>
+          <p class="summary-total-label">Estimated Total</p>
+          <p class="summary-total-amount" id="summaryTotal">₱0</p>
+          <p class="summary-total-note" id="summaryBreakdown">
+            Package: ₱0, Add-ons: ₱0, Hotel: ₱0
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="booking-footer">
+      <button class="btn-footer-cancel" id="bookingBackBtn">← Back</button>
+
+      <div class="booking-step-indicator">
+        <span>Step 5 of 6</span>
+        <div class="step-progress-bar">
+          <div class="step-progress-fill step5"></div>
+        </div>
+      </div>
+
+      <button class="btn-footer-next" id="bookingNextBtn">Next →</button>
+    </footer>
+  </main>
+
+  <script src="../../../JS/assets/userBookingsJs/bookings5.js"></script>
+</body>
+</html>

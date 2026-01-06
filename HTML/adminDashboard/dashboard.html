@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CHT Travel & Tour Management System - Dashboard</title>
+  <link rel="stylesheet" href="../CSS/assets/css/style.css">
+</head>
+<body class="app-body">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-circle">CHT</div>
+      <div class="logo-text">
+        <span>CHT Travel & Tours</span>
+        <small>Admin Panel</small>
+      </div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <a href="dashboard.html" class="sidebar-item active">
+        <span class="sidebar-icon">🏠</span> Dashboard
+      </a>
+      <a href="tour-packages.html" class="sidebar-item">
+        <span class="sidebar-icon">🧳</span> Tour Packages
+      </a>
+      <a href="employees.html" class="sidebar-item">
+        <span class="sidebar-icon">👥</span> Employees
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="link-btn" id="logoutBtnDash">⟵ Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <header class="content-header">
+      <div>
+        <h1 class="content-title">Admin Dashboard</h1>
+        <p class="content-subtitle">Overview of sales, bookings and performance</p>
+      </div>
+      <div class="content-header-right">
+        <button class="btn btn-primary small">⟳ Refresh Data</button>
+      </div>
+    </header>
+
+    <!-- TOP METRICS -->
+    <section class="grid-4">
+      <article class="card metric-card">
+        <div class="card-icon money">₱</div>
+        <div>
+          <p class="metric-label">Total Sales</p>
+          <p class="metric-value">₱717,600.00</p>
+        </div>
+      </article>
+
+      <article class="card metric-card">
+        <div class="card-icon booking">📅</div>
+        <div>
+          <p class="metric-label">Total Bookings</p>
+          <p class="metric-value">5</p>
+        </div>
+      </article>
+
+      <article class="card metric-card">
+        <div class="card-icon package">🧳</div>
+        <div>
+          <p class="metric-label">Active Packages</p>
+          <p class="metric-value">4</p>
+        </div>
+      </article>
+
+      <article class="card metric-card">
+        <div class="card-icon employee">👥</div>
+        <div>
+          <p class="metric-label">Active Employees</p>
+          <p class="metric-value">6</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- CHARTS -->
+    <section class="grid-2">
+      <article class="card">
+        <h2 class="card-title">Popular Tour Packages</h2>
+        <div class="fake-pie"></div>
+        <div class="legend">
+          <span class="dot blue"></span> Hokkaido Icebreaker + Sapporo Snow Festival
+          <span class="dot green"></span> Hong Kong & Macau Getaway
+          <span class="dot orange"></span> Taiwan Taipei + Taichung 4D3N
+          <span class="dot purple"></span> Bali 4D3N Christmas Tour
+        </div>
+      </article>
+
+      <article class="card">
+        <h2 class="card-title">Employee Performance</h2>
+        <div class="fake-bar-chart">
+          <div class="bar" style="height:60%"></div>
+          <div class="bar" style="height:100%"></div>
+          <div class="bar" style="height:90%"></div>
+          <div class="bar" style="height:10%"></div>
+          <div class="bar" style="height:5%"></div>
+          <div class="bar" style="height:15%"></div>
+        </div>
+        <p class="chart-caption">Number of bookings per employee (sample data)</p>
+      </article>
+    </section>
+
+    <!-- BOTTOM TABLES -->
+    <section class="grid-2">
+      <article class="card">
+        <h2 class="card-title">Recent Bookings</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+            <tr>
+              <th>ID</th><th>Client</th><th>Package</th><th>Date</th><th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>4</td><td>Miguel Santos</td><td>Taiwan Taipei + Taichung 4D3N</td><td>2025‑12‑15</td><td>Cancelled</td>
+            </tr>
+            <tr>
+              <td>5</td><td>Andrea Bautista</td><td>Hokkaido Icebreaker + Sapporo Snow Festival</td><td>2025‑12‑10</td><td>Confirmed</td>
+            </tr>
+            <tr>
+              <td>2</td><td>Jenny Villanueva</td><td>Hong Kong & Macau Getaway</td><td>2025‑12‑01</td><td>Pending</td>
+            </tr>
+            <tr>
+              <td>1</td><td>Carlos Ramirez</td><td>Hokkaido Icebreaker + Sapporo Snow Festival</td><td>2025‑11‑20</td><td>Confirmed</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2 class="card-title">Top Performers</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+            <tr>
+              <th>#</th><th>Employee</th><th>Bookings</th><th>Total Sales</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td>1</td><td>Anna Reyes</td><td>1</td><td>₱288,800.00</td></tr>
+            <tr><td>2</td><td>Mark Santos</td><td>1</td><td>₱228,800.00</td></tr>
+            <tr><td>3</td><td>admin</td><td>1</td><td>₱0.00</td></tr>
+            <tr><td>4</td><td>John Cruz</td><td>0</td><td>₱0.00</td></tr>
+            <tr><td>5</td><td>Maria Gomez</td><td>0</td><td>₱0.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

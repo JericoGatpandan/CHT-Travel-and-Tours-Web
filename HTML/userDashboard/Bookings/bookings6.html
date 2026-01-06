@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CHT Travel & Tour Management - New Booking (Step 6)</title>
+  <link rel="stylesheet" href="../../CSS/assets/css/user_style.css">
+  <link rel="stylesheet" href="../../CSS/assets/userBookingsCss/bookings.css">
+</head>
+<body class="user-body">
+  <!-- SIDEBAR -->
+  <aside class="user-sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-circle">CHT</div>
+      <div class="logo-text">
+        <span>CHT Travel & Tours</span>
+        <small>User Panel</small>
+      </div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <button class="btn-new-booking" id="sidebarNewBookingBtn">+ New Booking</button>
+
+      <a href="userDashboard.html" class="sidebar-item">
+        <span class="sidebar-icon">🏠</span> Dashboard
+      </a>
+      <a href="userBooking-step1.html" class="sidebar-item active">
+        <span class="sidebar-icon">🧾</span> New Booking
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">📅</span> Bookings
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">👤</span> Clients
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">🧳</span> Tour Packages
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">📍</span> Trips
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">🏨</span> Hotel
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">🚐</span> Transportation
+      </a>
+      <a href="#" class="sidebar-item">
+        <span class="sidebar-icon">💳</span> Payments
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button id="userLogoutBtn" class="logout-link">⟵ Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="user-content booking-content">
+    <!-- STEP BAR -->
+    <section class="booking-steps">
+      <div class="step-item completed">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Customer</span>
+      </div>
+      <div class="step-line"></div>
+
+      <div class="step-item completed">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Package</span>
+      </div>
+      <div class="step-line"></div>
+
+      <div class="step-item completed">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Add-ons</span>
+      </div>
+      <div class="step-line"></div>
+
+      <div class="step-item completed">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Hotel</span>
+      </div>
+      <div class="step-line"></div>
+
+      <div class="step-item completed">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Transport</span>
+      </div>
+      <div class="step-line"></div>
+
+      <div class="step-item active">
+        <div class="step-circle">6</div>
+        <span class="step-label">Confirm</span>
+      </div>
+    </section>
+
+    <!-- MAIN LAYOUT -->
+    <section class="booking-main-layout">
+      <!-- LEFT: REVIEW CARD -->
+      <div class="booking-form-area">
+        <h1 class="booking-title">Review Your Booking</h1>
+        <p class="booking-subtitle">
+          Please review all details before confirming your booking.
+        </p>
+
+        <section class="review-card card">
+          <div class="review-row">
+            <div class="review-label-block">
+              <span class="review-section-title">Customer</span>
+            </div>
+            <div class="review-value" id="reviewCustomer">–</div>
+          </div>
+
+          <div class="review-row">
+            <div class="review-label-block">
+              <span class="review-section-title">Travel Date</span>
+            </div>
+            <div class="review-value" id="reviewTravelDate">–</div>
+          </div>
+
+          <div class="review-row">
+            <div class="review-label-block">
+              <span class="review-section-title">Selected Package</span>
+            </div>
+            <div class="review-value" id="reviewPackage">–</div>
+          </div>
+
+          <div class="review-row">
+            <div class="review-label-block">
+              <span class="review-section-title">Accommodation</span>
+            </div>
+            <div class="review-value" id="reviewHotel">–</div>
+          </div>
+
+          <div class="review-row">
+            <div class="review-label-block">
+              <span class="review-section-title">Transportation</span>
+            </div>
+            <div class="review-value" id="reviewTransport">–</div>
+          </div>
+        </section>
+
+        <!-- TOTAL AMOUNT BANNER -->
+        <section class="total-banner">
+          <div class="total-label">Total Amount</div>
+          <div class="total-amount" id="reviewTotalAmount">PHP 0.00</div>
+          <div class="total-note">All taxes and fees included</div>
+        </section>
+
+        <!-- TERMS -->
+        <section class="terms card">
+          <label class="terms-label">
+            <input type="checkbox" id="agreeTerms" checked>
+            <span>I agree to the Terms and Conditions and Cancellation Policy</span>
+          </label>
+          <p id="termsError" class="form-error hidden">
+            You must agree to the Terms and Conditions to confirm the booking.
+          </p>
+        </section>
+      </div>
+
+      <!-- RIGHT: SUMMARY SIDEBAR -->
+      <aside class="booking-summary">
+        <div class="summary-header">
+          <h3>Booking Summary</h3>
+          <p class="summary-progress-label">
+            <span class="summary-dot"></span>
+            <span id="summaryPercent">100% Complete</span>
+          </p>
+        </div>
+
+        <div class="summary-items">
+          <div class="summary-item">
+            <div class="summary-icon">👤</div>
+            <div>
+              <div class="summary-label">Customer</div>
+              <div class="summary-value" id="summaryCustomer">Not set</div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <div class="summary-icon">🧳</div>
+            <div>
+              <div class="summary-label">Package</div>
+              <div class="summary-value" id="summaryPackage">Not selected</div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <div class="summary-icon">🏨</div>
+            <div>
+              <div class="summary-label">Hotel</div>
+              <div class="summary-value" id="summaryHotel">Not selected</div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <div class="summary-icon">🚐</div>
+            <div>
+              <div class="summary-label">Transport</div>
+              <div class="summary-value" id="summaryTransport">Not selected</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-progress-circle">
+          <div class="circle-outer">
+            <div class="circle-inner">
+              <span id="summaryStepFraction">5/5</span>
+            </div>
+          </div>
+          <p class="summary-total-label">Estimated Total</p>
+          <p class="summary-total-amount" id="summaryTotal">₱0</p>
+          <p class="summary-total-note" id="summaryBreakdown">
+            Package: ₱0
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="booking-footer">
+      <button class="btn-footer-cancel" id="bookingBackBtn">← Back</button>
+
+      <div class="booking-step-indicator">
+        <span>Step 6 of 6</span>
+        <div class="step-progress-bar">
+          <div class="step-progress-fill step6"></div>
+        </div>
+      </div>
+
+      <button class="btn-footer-confirm" id="confirmBookingBtn">
+        Confirm Booking →
+      </button>
+    </footer>
+  </main>
+
+  <script src="../../../JS/assets/userBookingsJs/bookings6.js"></script>
+</body>
+</html>
