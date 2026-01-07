@@ -1,6 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+      .user-sidebar {
+        background: #fff !important;
+        color: #1f2933;
+        display: flex;
+        flex-direction: column;
+        min-width: 230px;
+        max-width: 260px;
+        box-shadow: 1px 0 0 #e1e6f5;
+        position: relative;
+        min-height: 100%;
+        max-height: 100%;
+        overflow-y: auto;
+      }
+      .sidebar-logo {
+        color: #1f2933;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        display: flex;
+      }
+      .logo-text {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .logo-text small {
+        display: block;
+        color: #b0b8c9;
+        font-size: 15px;
+        font-weight: normal;
+        margin-top: 2px;
+      }
+      .sidebar-item {
+        color: #222 !important;
+      }
+      .sidebar-item.active {
+        background: #e9effc !important;
+        color: #2563eb !important;
+        font-weight: normal;
+      }
+      .sidebar-item:hover {
+        background: #f5f7fb;
+        color: #2563eb;
+      }
+      .sidebar-footer {
+        padding-bottom: 18px;
+      }
+      .logout-link {
+        color: #111 !important;
+      }
+    </style>
   <meta charset="UTF-8">
   <title>CHT Travel & Tour Management - New Booking (Step 2)</title>
   <link rel="stylesheet" href="../../CSS/assets/css/user_style.css">
@@ -9,10 +61,10 @@
 <body class="user-body">
   <!-- SIDEBAR -->
   <aside class="user-sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-circle">CHT</div>
-      <div class="logo-text">
-        <span>CHT Travel & Tours</span>
+    <div class="sidebar-logo" style="flex-direction:column;align-items:center;gap:8px;">
+      <img src="../../assets/no bg logo.png" alt="CHT Travel & Tours Logo" style="max-width:120px;max-height:70px;display:block;" />
+      <div class="logo-text" style="text-align:center;">
+        <span>CHT Travel & Tours</span><br>
         <small>User Panel</small>
       </div>
     </div>

@@ -26,8 +26,9 @@
 }
 
 /* SIDEBAR */
+/* Changed for userBookings.html navigator background */
 .user-sidebar {
-  background: #0f172a;
+  background: #6AB4D1;
   color: #e5edff;
   display: flex;
   flex-direction: column;

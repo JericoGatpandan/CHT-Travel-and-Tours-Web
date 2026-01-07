@@ -5,14 +5,54 @@
   <title>CHT Travel & Tour Management - Bookings</title>
   <link rel="stylesheet" href="../CSS/assets/css/user_style.css">
   <link rel="stylesheet" href="../CSS/assets/userBookingsCss/bookings.css">
+  <style>
+    /* Sidebar scrollable, white, no fixed height, no gap from footer */
+    .user-sidebar {
+      background: #fff !important;
+      color: #1f2933;
+      display: flex;
+      flex-direction: column;
+      min-width: 230px;
+      max-width: 260px;
+      box-shadow: 1px 0 0 #e1e6f5;
+      position: relative;
+      min-height: 100%;
+      max-height: 100%;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      color: #1f2933;
+    }
+    .sidebar-item {
+      color: #1f2933;
+    }
+    .sidebar-item.active {
+      background: #e1e6f5;
+      color: #2563eb;
+    }
+    .sidebar-item:hover {
+      background: #f5f7fb;
+      color: #2563eb;
+    }
+    .logo-circle {
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+    .sidebar-footer {
+      padding-bottom: 18px;
+    }
+    .logout-link {
+      color: #111 !important;
+    }
+  </style>
 </head>
 <body class="user-body">
   <!-- SIDEBAR -->
   <aside class="user-sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-circle">CHT</div>
-      <div class="logo-text">
-        <span>CHT Travel & Tours</span>
+    <div class="sidebar-logo" style="flex-direction:column;align-items:center;gap:8px;">
+      <img src="../assets/no bg logo.png" alt="CHT Travel & Tours Logo" style="max-width:120px;max-height:70px;display:block;" />
+      <div class="logo-text" style="text-align:center;">
+        <span>CHT Travel & Tours</span><br>
         <small>User Panel</small>
       </div>
     </div>
@@ -71,21 +111,13 @@
 </header>
 
 <section class="bookings-toolbar">
-  <div class="bookings-search-wrap">
-    <span class="search-icon">🔍</span>
-    <input
-      type="text"
-      id="bookingsSearch"
-      placeholder="Search by client, destination, or package..."
-    >
+  <div class="bookings-search-wrap" style="display:flex;align-items:center;gap:16px;width:100%;">
+    <input type="text" class="search-bar" placeholder="Search bookings by client, destination, or package..." style="flex:1;padding:10px 16px;border-radius:24px;border:1px solid #e1e6f5;font-size:16px;outline:none;" />
+    <button class="btn btn-primary bookings-new-btn" id="newBookingBtnTop">
+      + New Booking
+    </button>
+    <span class="bookings-count-label" id="bookingsCountLabel">0 booking(s)</span>
   </div>
-
-  <!-- Styled New Booking button -->
-  <button class="btn btn-primary bookings-new-btn" id="newBookingBtnTop">
-    + New Booking
-  </button>
-
-  <span class="bookings-count-label" id="bookingsCountLabel">0 booking(s)</span>
 </section>
 
     <!-- STATS CARDS -->
